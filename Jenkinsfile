@@ -2,7 +2,7 @@ pipeline {
     agent { label 'docker-agent-01' }
     tools {
         jdk 'Java21'
-        maven 'Maven 3'
+        maven 'Maven3'
     }
     stages {
         stage ("cleanup workspace") {
