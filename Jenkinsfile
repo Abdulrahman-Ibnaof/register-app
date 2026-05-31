@@ -1,31 +1,51 @@
 pipeline {
     agent { label 'docker-agent-01' }
+
     tools {
         jdk 'Java21'
         maven 'Maven3'
     }
+
     stages {
-        stage ("cleanup workspace") {
+
+        stage('Cleanup') {
             steps {
                 cleanWs()
             }
         }
-        stage ("checkout from SCM") {
+
+        stage('Checkout') {
             steps {
                 git branch: 'main',
-                  credentialsId: 'github',
-                  url: 'https://github.com/Abdulrahman-Ibnaof/register-app.git'
+                    credentialsId: 'github',
+                    url: 'https://github.com/Abdulrahman-Ibnaof/register-app.git'
             }
         }
-        stage ("build Application") {
+
+        stage('Build') {
             steps {
                 sh 'mvn clean package'
             }
         }
-         stage ("run tests") {
+
+        stage('Archive Artifact') {
             steps {
-                sh 'mvn test'
+                archiveArtifacts artifacts: '**/target/*.jar, **/target/*.war', fingerprint: true
             }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline completed successfully'
+        }
+
+        failure {
+            echo 'Pipeline failed'
+        }
+
+        always {
+            cleanWs()
         }
     }
 }
