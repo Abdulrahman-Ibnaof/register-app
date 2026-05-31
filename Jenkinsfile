@@ -1,4 +1,4 @@
-pipline {
+pipeline {
     agent { label 'docker-agent-01' }
     tools {
         jdk 'Java21'
