@@ -7,7 +7,6 @@ pipeline {
     }
 
     stages {
-
         stage('Cleanup') {
             steps {
                 cleanWs()
@@ -33,17 +32,15 @@ pipeline {
                 archiveArtifacts artifacts: '**/target/*.jar, **/target/*.war', fingerprint: true
             }
         }
-		
-		stage('SonarQube Analysis') {
+
+        stage('SonarQube Analysis') {
             steps {
-				script {
-					withSonarQubeEnv('sonarqube-server') {
-					sh 'mvn sonar:sonar'
+                withSonarQubeEnv('sonarqube-server') {
+                    sh 'mvn sonar:sonar'
+                }
             }
         }
-		
     }
-	}
 
     post {
         success {
