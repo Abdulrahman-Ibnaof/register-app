@@ -39,13 +39,14 @@ pipeline {
                     sh 'mvn sonar:sonar'
                 }
             }
-		stage("Quality Gate")
-			steps {
-				script {
-					withForQualityGate abortPipeline: false, credentialsId: 'jenkins-sonarqube-token'
-					}
-				}
-			}
+        }
+
+        stage('Quality Gate') {
+            steps {
+                timeout(time: 5, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: false
+                }
+            }
         }
     }
 
