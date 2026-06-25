@@ -55,6 +55,21 @@ pipeline {
         }
 
       }
+
+            stage("Trivy Scan") {
+                steps {
+                    sh "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image abdoshabakat/register-app:latest --no-progress --scanners vuln --exit-code 0 --severity HIGH,CRITICAL --format table"
+                }
+            }
+
+            stage ("cleanup") {
+                steps {
+                    script {
+                        sh "docker rmi ${IMAGE_NAME}:${IMAGE_TAG}"
+                        sh "docker rmi ${IMAGE_NAME}:latest"
+                    }
+                }
+            } 
     }
 }
 
